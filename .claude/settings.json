@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "bash": [
+      "python*",
+      "pip*",
+      "python3*",
+      "ls",
+      "find",
+      "grep",
+      "git*"
+    ]
+  },
+  "hints": {
+    "roadmap": "Read ROADMAP.md first — it's the source of truth for what task is next",
+    "teaching-style": "Hands-on first: write/edit a real script, explain concepts through code, not lecture-first",
+    "session-flow": "1. Check ROADMAP.md for current task\n2. Build something concrete (small script)\n3. Explain concepts via the code\n4. Update ROADMAP.md when done\n5. Keep sessions tight — one script/concept cluster per session"
+  }
+}
