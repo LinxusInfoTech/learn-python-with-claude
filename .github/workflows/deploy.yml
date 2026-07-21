@@ -30,7 +30,7 @@ jobs:
         chmod 600 $HOME/.kube/config
 
     - name: Install kubectl
-      uses: azure/setup-kubectl@v3
+      uses: azure/setup-kubectl@v5
       with:
         version: 'v1.28.0'
 
