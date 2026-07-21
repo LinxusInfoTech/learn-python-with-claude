@@ -35,6 +35,8 @@ setup(
         "console_scripts": [
             "learnwithclaude=learn_python_with_claude.cli:main",
             "lwc=learn_python_with_claude.cli:main",
+            "lwc-sub=learn_python_with_claude.cli_subscription:main",
+            "learnwithclaude-sub=learn_python_with_claude.cli_subscription:main",
         ],
     },
     classifiers=[

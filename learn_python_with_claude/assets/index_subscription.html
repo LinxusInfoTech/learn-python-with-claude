@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Python with Claude (Subscription Mode)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar - Lessons */
+        .sidebar {
+            width: 250px;
+            background: #1e293b;
+            border-right: 1px solid #334155;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #60a5fa;
+        }
+
+        .lesson-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #334155;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .lesson-item:hover {
+            background: #475569;
+            border-color: #60a5fa;
+        }
+
+        .lesson-item.active {
+            background: #0ea5e9;
+            color: white;
+            border-color: #0284c7;
+        }
+
+        /* Main content area */
+        .main {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Lesson content */
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #0f172a;
+        }
+
+        .content-area h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #60a5fa;
+        }
+
+        .lesson-content {
+            line-height: 1.8;
+            color: #cbd5e1;
+        }
+
+        .lesson-content p {
+            margin-bottom: 15px;
+        }
+
+        .lesson-content code {
+            background: #1e293b;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            color: #fbbf24;
+        }
+
+        .lesson-content pre {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 3px solid #60a5fa;
+        }
+
+        .lesson-content pre code {
+            background: none;
+            padding: 0;
+            color: #e2e8f0;
+        }
+
+        /* Chat panel */
+        .chat-panel {
+            width: 380px;
+            background: #1e293b;
+            border-left: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 15px;
+            border-bottom: 1px solid #334155;
+            font-weight: bold;
+            color: #60a5fa;
+            font-size: 13px;
+        }
+
+        .subscription-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-left: 5px;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .message.info {
+            background: #1e40af;
+            color: #bfdbfe;
+            border-left: 3px solid #60a5fa;
+        }
+
+        .message.success {
+            background: #065f46;
+            color: #a7f3d0;
+            border-left: 3px solid #10b981;
+        }
+
+        .message.warning {
+            background: #7c2d12;
+            color: #fed7aa;
+            border-left: 3px solid #f97316;
+        }
+
+        .chat-input-area {
+            padding: 15px;
+            border-top: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-input-area textarea {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 10px;
+            color: #e2e8f0;
+            font-family: inherit;
+            font-size: 12px;
+            resize: none;
+            min-height: 60px;
+            max-height: 100px;
+        }
+
+        .chat-input-area textarea:focus {
+            outline: none;
+            border-color: #60a5fa;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #0ea5e9;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0284c7;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: #475569;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #64748b;
+        }
+
+        .hint-text {
+            font-size: 11px;
+            color: #64748b;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .scrollbar-area {
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        .mode-info {
+            background: #064e3b;
+            border: 1px solid #10b981;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            color: #a7f3d0;
+        }
+
+        .copy-hint {
+            background: #1e40af;
+            border-left: 3px solid #60a5fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 11px;
+            color: #bfdbfe;
+        }
+
+        @media (max-width: 1200px) {
+            .chat-panel {
+                width: 320px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Sidebar: Lessons -->
+        <div class="sidebar">
+            <h2>📚 Lessons</h2>
+            <div id="lessonsList"></div>
+        </div>
+
+        <!-- Main: Lesson Content -->
+        <div class="main">
+            <div class="content-area">
+                <div id="lessonContent">
+                    <h1>Welcome to Learn Python with Claude</h1>
+                    <p style="color: #64748b; margin-top: 20px;">
+                        ← Select a lesson from the left to get started.
+                        <br><br>
+                        <strong style="color: #10b981;">✓ Subscription Mode Enabled</strong>
+                        <br>No API key needed! Uses your Claude subscription.
+                        <br><br>
+                        • <strong>Read</strong> the lesson
+                        <br>• <strong>Select text</strong> on the page
+                        <br>• <strong>Ask Claude</strong> via the panel on the right
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Sidebar: Chat with Claude -->
+            <div class="chat-panel">
+                <div class="chat-header">💬 Ask Claude <span class="subscription-badge">SUBSCRIPTION</span></div>
+
+                <div class="scrollbar-area">
+                    <div class="chat-messages" id="chatMessages"></div>
+                </div>
+
+                <div class="chat-input-area">
+                    <div class="mode-info">
+                        🔐 <strong>Subscription Mode</strong><br>
+                        Questions are prepared and sent to Claude.ai using your subscription.
+                    </div>
+
+                    <textarea id="chatInput" placeholder="Ask me anything about this lesson..."></textarea>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="openWithClaude()">Open Claude.ai ↗</button>
+                        <button class="btn btn-secondary" onclick="copyToClipboard()">Copy Question</button>
+                    </div>
+
+                    <div class="hint-text">
+                        💡 Tip: Select text → type question → click button
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLesson = null;
+        let lastPreparedMessage = null;
+
+        // Load lessons on page load
+        async function loadLessons() {
+            try {
+                const res = await fetch("/api/lessons");
+                const data = await res.json();
+                const lessonsList = document.getElementById("lessonsList");
+
+                lessonsList.innerHTML = data.lessons
+                    .map(lesson => `
+                        <div class="lesson-item" onclick="loadLesson('${lesson.id}')">
+                            ${lesson.title}
+                        </div>
+                    `)
+                    .join("");
+            } catch (error) {
+                console.error("Error loading lessons:", error);
+            }
+        }
+
+        // Load a specific lesson
+        async function loadLesson(lessonId) {
+            try {
+                const res = await fetch(`/api/lessons/${lessonId}`);
+                const lesson = await res.json();
+                currentLesson = lessonId;
+
+                // Update sidebar highlight
+                document.querySelectorAll(".lesson-item").forEach(el => el.classList.remove("active"));
+                event.target.classList.add("active");
+
+                // Display lesson content
+                const content = lesson.content
+                    .split("\n")
+                    .map(line => line.trim())
+                    .filter(line => line)
+                    .join("\n");
+
+                // Simple markdown to HTML conversion
+                let html = `<h1>${lesson.title}</h1>\n`;
+                const lines = content.split("\n");
+                let inCodeBlock = false;
+                let codeBlock = "";
+
+                for (let line of lines) {
+                    if (line.startsWith("```")) {
+                        if (inCodeBlock) {
+                            html += `<pre><code>${escapeHtml(codeBlock.trim())}</code></pre>\n`;
+                            codeBlock = "";
+                            inCodeBlock = false;
+                        } else {
+                            inCodeBlock = true;
+                        }
+                    } else if (inCodeBlock) {
+                        codeBlock += line + "\n";
+                    } else if (line.startsWith("**") && line.endsWith("**")) {
+                        html += `<p><strong>${escapeHtml(line.slice(2, -2))}</strong></p>\n`;
+                    } else if (line) {
+                        html += `<p>${escapeHtml(line)}</p>\n`;
+                    }
+                }
+
+                document.getElementById("lessonContent").innerHTML = `<div class="lesson-content">${html}</div>`;
+                document.getElementById("chatMessages").innerHTML = `
+                    <div class="message info">
+                        ✓ Lesson loaded: <strong>${lesson.title}</strong><br>
+                        Ready to ask Claude! Select text and ask a question.
+                    </div>
+                `;
+            } catch (error) {
+                console.error("Error loading lesson:", error);
+            }
+        }
+
+        // Prepare message for Claude
+        async function prepareMessage() {
+            const input = document.getElementById("chatInput");
+            const message = input.value.trim();
+            if (!message) return;
+
+            // Get selected text
+            const selectedText = window.getSelection().toString();
+
+            // Show preparing message
+            const chatMessages = document.getElementById("chatMessages");
+            chatMessages.innerHTML += `<div class="message info">⏳ Preparing your question...</div>`;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                const res = await fetch("/api/prepare-chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        message,
+                        lesson_id: currentLesson,
+                        selected_text: selectedText
+                    })
+                });
+
+                const data = await res.json();
+                lastPreparedMessage = data.message;
+
+                // Show success
+                chatMessages.innerHTML += `
+                    <div class="message success">
+                        ✓ Question prepared!<br>
+                        Click <strong>"Open Claude.ai"</strong> or <strong>"Copy Question"</strong>
+                    </div>
+                    <div class="copy-hint">
+                        📋 Your prepared message is ready to send to Claude.
+                    </div>
+                `;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                input.value = "";
+            } catch (error) {
+                chatMessages.innerHTML += `<div class="message warning">❌ Error: ${escapeHtml(error.message)}</div>`;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        // Open Claude.ai with context
+        function openWithClaude() {
+            if (!lastPreparedMessage) {
+                alert("Please ask a question first!");
+                return;
+            }
+            // Open Claude.ai in new tab
+            window.open("https://claude.ai", "_blank");
+
+            // Copy to clipboard automatically
+            copyToClipboard();
+
+            // Show hint
+            const chatMessages = document.getElementById("chatMessages");
+            chatMessages.innerHTML += `
+                <div class="message info">
+                    📋 Question copied!<br>
+                    Paste it in Claude.ai when it opens →
+                </div>
+            `;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Copy message to clipboard
+        function copyToClipboard() {
+            if (!lastPreparedMessage) {
+                alert("Please ask a question first!");
+                return;
+            }
+
+            navigator.clipboard.writeText(lastPreparedMessage).then(() => {
+                const chatMessages = document.getElementById("chatMessages");
+                chatMessages.innerHTML += `
+                    <div class="message success">
+                        ✓ Copied to clipboard!<br>
+                        Paste it in Claude.ai →
+                    </div>
+                `;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }).catch(err => {
+                alert("Copy failed: " + err);
+            });
+        }
+
+        // Send message when Enter+Ctrl pressed
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && e.ctrlKey) {
+                prepareMessage();
+            }
+        });
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const map = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Load lessons on page load
+        loadLessons();
+
+        // Show initial info
+        setTimeout(() => {
+            const chatMessages = document.getElementById("chatMessages");
+            if (!chatMessages.innerHTML.includes("Lesson loaded")) {
+                chatMessages.innerHTML = `
+                    <div class="message info">
+                        👋 Welcome to Learn Python with Claude!<br><br>
+                        <strong>Subscription Mode Active</strong><br>
+                        ✓ No API key needed<br>
+                        ✓ Uses your Claude subscription<br><br>
+                        Select a lesson → Ask questions →<br>
+                        Your questions are prepared and sent to Claude.ai
+                    </div>
+                `;
+            }
+        }, 500);
+    </script>
+</body>
+</html>
