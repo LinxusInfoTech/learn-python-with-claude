@@ -1,0 +1,17 @@
+MANIFEST.in
+README.md
+setup.py
+learn_python_with_claude/__init__.py
+learn_python_with_claude/__main__.py
+learn_python_with_claude/cli.py
+learn_python_with_claude/cli_subscription.py
+learn_python_with_claude/server.py
+learn_python_with_claude/server_no_api.py
+learn_python_with_claude.egg-info/PKG-INFO
+learn_python_with_claude.egg-info/SOURCES.txt
+learn_python_with_claude.egg-info/dependency_links.txt
+learn_python_with_claude.egg-info/entry_points.txt
+learn_python_with_claude.egg-info/requires.txt
+learn_python_with_claude.egg-info/top_level.txt
+learn_python_with_claude/assets/index.html
+learn_python_with_claude/assets/index_subscription.html

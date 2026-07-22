@@ -1,3 +1,0 @@
-include README.md
-include LICENSE
-recursive-include learn_python_with_claude/assets *
